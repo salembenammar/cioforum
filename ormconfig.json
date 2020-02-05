@@ -1,0 +1,31 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "admin",
+  "database": "cioforum",
+  "synchronize": true,
+  "logging": true,
+  "entities": [
+    "src/**/*.entity.{ts,js}"
+  ],
+  "migrations": [
+    "src/migrations/**/*.ts"
+  ],
+  "subscribers": [
+    "subscribers/**/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "migrations",
+    "subscribersDir": "subscribers"
+  },
+  "migrationsRun": false,
+  "migrationsTableName": "Migrations",
+  "seeds": [
+    "seeds/**/*.seed.ts"
+  ],
+  "factories": [
+    "factories/**/*.factory.ts"
+  ]
+}

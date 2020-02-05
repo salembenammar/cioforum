@@ -1,0 +1,72 @@
+image: gitlab-registry.proxym-group.net/cio-forum/cio-forum-backend
+services:
+  - docker:dind
+stages:
+  - review
+  - test
+  - build
+  - publish
+
+cache:
+  untracked: true
+  paths:
+    - node_modules
+    - .sonarwork
+
+
+.basic_job_definition: &basic_job_definition
+  tags:
+    - docker
+  retry: 2
+
+
+review:
+  <<: *basic_job_definition
+  before_script:
+    - npm install
+  image: gitlab-registry.proxym-group.net/injazat/2019_ebiz_injazaat_injazaat_dashboard/sonar-scanner
+  stage: review
+  script:
+    - ./review.sh
+  #cache:
+  #  paths:
+  #    - node_modules
+  allow_failure: true
+test:
+  <<: *basic_job_definition
+  before_script:
+    - npm install
+  stage: test
+  script:
+    - npm run test
+    - npm run test:e2e
+    - npm run test:cov
+  allow_failure: true
+
+push_image:
+  <<: *basic_job_definition
+  stage: publish
+  image: gitlab-registry.proxym-group.net/injazat/2019_ebiz_injazaat_injazaat_dashboard/dind:latest
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest -< Dockerfile.prod
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  #when: manual
+  only:
+    refs:
+      - develop
+  allow_failure: true
+
+build:
+  <<: *basic_job_definition
+  before_script:
+    - npm install
+  stage: build
+  script:
+    - npm run build
+  #allow_failure: true
+  artifacts:
+    paths:
+      - dist

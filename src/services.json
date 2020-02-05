@@ -1,0 +1,14 @@
+{
+  "auth": [
+    {
+      "name": "SIGNIN",
+      "endpoint": "/auth/signin",
+      "verb": "POST"
+    },
+    {
+      "name": "SIGNUP",
+      "endpoint": "/auth/signup",
+      "verb": "POST"
+    }
+  ]
+}

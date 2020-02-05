@@ -1,0 +1,13 @@
+db:
+  host: 'localhost'
+  username: 'root'
+  password: 'admin'
+  synchronize: true
+
+jwt:
+  secret: 'topSecret51'
+
+uploads:
+  path: '/uploads'
+logs:
+  path: 'logs'

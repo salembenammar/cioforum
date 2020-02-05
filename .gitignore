@@ -1,0 +1,8 @@
+node_modules
+Archive.zip
+dist
+.idea
+.vscode
+*.log
+data
+coverage

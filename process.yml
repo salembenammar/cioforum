@@ -1,0 +1,11 @@
+apps:
+  - script   : 'dist/src/main.js'
+    name     : 'cioforum'
+    exec_mode: 'cluster'
+    instances: max
+    watch: false
+    ignore_watch: ['*.log', 'node_modules', 'access.log', 'error.log']
+    log_type: 'json'
+    error_file: 'err.log'
+    out_file: 'out.log'
+    merge_logs: true

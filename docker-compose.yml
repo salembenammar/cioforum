@@ -1,0 +1,36 @@
+version: "2.1"
+networks:
+  cioforum:
+    driver: bridge
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: cioforum_mysqldev
+    env_file: ./mysql/.env
+    ports:
+      - "3310:3306"
+    networks:
+      - cioforum
+    volumes:
+      - ./data/mysql:/var/lib/mysql:rw
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: cioforum_api
+    command: "pm2 logs cioforum"
+    ports:
+      - "3001:80"
+    #env_file: ./backend/.env
+    volumes:
+      #- ./:/app/:rw
+      - ./logs/:/app/logs/:rw
+    networks:
+      - cioforum
+    depends_on:
+        - mysql
+    healthcheck:
+        test: ["CMD", "wget", "http://localhost"]
+        interval: 10s
+        timeout: 3s
+        retries: 3
